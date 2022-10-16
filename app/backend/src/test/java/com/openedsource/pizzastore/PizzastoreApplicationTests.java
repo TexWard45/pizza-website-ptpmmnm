@@ -1,10 +1,10 @@
-package com.ptpmmnm.pizzastore;
+package com.openedsource.pizzastore;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PizzaStoreApplicationTests {
+class PizzastoreApplicationTests {
 
 	@Test
 	void contextLoads() {
