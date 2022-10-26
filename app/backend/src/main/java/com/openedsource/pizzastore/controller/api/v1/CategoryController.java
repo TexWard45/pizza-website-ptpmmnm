@@ -38,7 +38,7 @@ public class CategoryController {
         Category updateCategory = categoryRepository.save(category);
         return new ResponseEntity<>(updateCategory, HttpStatus.OK);
     }
-    @PutMapping("/base/update/{id}")
+    @PutMapping("/category/update/{id}")
     public ResponseEntity<Category> updateBase(@RequestBody Category category,@PathVariable("id")Integer id){
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         if(categoryOptional.isEmpty()){
