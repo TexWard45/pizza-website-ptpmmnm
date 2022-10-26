@@ -38,6 +38,16 @@ public class CategoryController {
         Category updateCategory = categoryRepository.save(category);
         return new ResponseEntity<>(updateCategory, HttpStatus.OK);
     }
+    @PutMapping("/base/update/{id}")
+    public ResponseEntity<Category> updateBase(@RequestBody Category category,@PathVariable("id")Integer id){
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
+        if(categoryOptional.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        category.setId(id);
+        Category updateCategory = categoryRepository.save(category);
+        return new ResponseEntity<>(updateCategory,HttpStatus.NO_CONTENT);
+    }
     @DeleteMapping("/category/delete/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable("id")Integer id) {
         categoryRepository.deleteById(id);
