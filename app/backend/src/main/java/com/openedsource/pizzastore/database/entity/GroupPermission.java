@@ -17,5 +17,6 @@ public class GroupPermission {
 
     private String permission;
 
-    private TinyIntTypeDescriptor value;
+    @Column(length = 1)
+    private int value;
 }
