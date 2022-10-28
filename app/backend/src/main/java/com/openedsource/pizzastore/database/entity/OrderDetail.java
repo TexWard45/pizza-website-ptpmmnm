@@ -3,7 +3,7 @@ package com.openedsource.pizzastore.database.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.text.DecimalFormat;
+
 
 @Entity
 @Table(name = "order_detail")
@@ -19,7 +19,7 @@ public class OrderDetail {
     @Column(name = "pizza_detail_id")
     private int pizzadetailid;
 
-    private DecimalFormat price;
+    private float price;
 
     private int quantity;
 
