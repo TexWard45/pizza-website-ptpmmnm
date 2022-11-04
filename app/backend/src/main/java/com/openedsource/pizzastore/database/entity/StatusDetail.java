@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "status_detail")
@@ -20,5 +20,5 @@ public class StatusDetail {
     @Column(name = "status_id")
     private int statusid;
 
-    private Date time_created;
+    private LocalDate time_created;
 }
