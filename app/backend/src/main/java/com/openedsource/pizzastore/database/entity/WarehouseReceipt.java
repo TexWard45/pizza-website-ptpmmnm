@@ -3,7 +3,7 @@ package com.openedsource.pizzastore.database.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "warehouse_receipt")
@@ -19,5 +19,5 @@ public class WarehouseReceipt {
 
     private String handler;
 
-    private Date time_created;
+    private LocalDate time_created;
 }
