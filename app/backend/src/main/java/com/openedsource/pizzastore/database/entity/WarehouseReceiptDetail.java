@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "warehouse_receipt_detail")
@@ -23,7 +23,7 @@ public class WarehouseReceiptDetail {
 
     private String handler;
 
-    private Date time_created;
+    private LocalDate time_created;
 
 
 }
