@@ -4,7 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Time;
-import java.text.DecimalFormat;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "order")
@@ -21,7 +21,7 @@ public class Order {
     private String handler;
 
 
-    private DecimalFormat total_price;
+    private float total_price;
 
     private int quantity;
 
@@ -37,7 +37,7 @@ public class Order {
     private int order_type;
 
     @Column(name = "order_time")
-    private Time ordertime;
+    private LocalDate ordertime;
 
     private String note;
 }
