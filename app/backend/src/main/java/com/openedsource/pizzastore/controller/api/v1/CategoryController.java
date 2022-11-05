@@ -27,30 +27,4 @@ public class CategoryController {
         Optional<Category> category = categoryRepository.findById(id);
         return ResponseEntity.ok().body(category.get());
     }
-    @PostMapping("/category/add")
-    public ResponseEntity<Category> addCategory(@Valid @RequestBody Category category) {
-        Category newCategory =  categoryRepository.save(category);
-        return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/category/update")
-    public ResponseEntity<Category> updateCategory(@RequestBody Category category){
-        Category updateCategory = categoryRepository.save(category);
-        return new ResponseEntity<>(updateCategory, HttpStatus.OK);
-    }
-    @PutMapping("/category/update/{id}")
-    public ResponseEntity<Category> updateBase(@RequestBody Category category,@PathVariable("id")Integer id){
-        Optional<Category> categoryOptional = categoryRepository.findById(id);
-        if(categoryOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        category.setId(id);
-        Category updateCategory = categoryRepository.save(category);
-        return new ResponseEntity<>(updateCategory,HttpStatus.NO_CONTENT);
-    }
-    @DeleteMapping("/category/delete/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable("id")Integer id) {
-        categoryRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
