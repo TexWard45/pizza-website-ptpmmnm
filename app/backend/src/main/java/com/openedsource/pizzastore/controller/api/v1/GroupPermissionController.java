@@ -27,20 +27,4 @@ public class GroupPermissionController {
         Optional<GroupPermission> groupPermission = groupPermissionRepository.findById(id);
         return ResponseEntity.ok().body(groupPermission.get());
     }
-    @PostMapping("/grouppermission/add")
-    public ResponseEntity<GroupPermission> addGroupPermission(@RequestBody GroupPermission groupPermission) {
-        GroupPermission newGroupPermission =  groupPermissionRepository.save(groupPermission);
-        return new ResponseEntity<>(newGroupPermission, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/grouppermission/update")
-    public ResponseEntity<GroupPermission> updateGroupPermission(@RequestBody GroupPermission groupPermission){
-        GroupPermission updateGroupPermission = groupPermissionRepository.save(groupPermission);
-        return new ResponseEntity<>(updateGroupPermission, HttpStatus.OK);
-    }
-    @DeleteMapping("/grouppermission/delete/{id}")
-    public ResponseEntity<?> deleteGroupPermission(@PathVariable("id")Integer id) {
-        groupPermissionRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
