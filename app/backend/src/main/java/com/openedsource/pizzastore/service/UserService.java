@@ -2,7 +2,6 @@ package com.openedsource.pizzastore.service;
 
 import com.openedsource.pizzastore.database.entity.UserEntity;
 import com.openedsource.pizzastore.database.repository.UserRepository;
-import com.openedsource.pizzastore.util.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
