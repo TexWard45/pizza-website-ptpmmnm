@@ -16,7 +16,7 @@ public class ToppingDetail {
     @Column(name = "pizza_id")
     private int pizzaid;
 
-    @Id
+//    @Id
     @Column(name = "topping_id")
     private int toppingid;
 }
