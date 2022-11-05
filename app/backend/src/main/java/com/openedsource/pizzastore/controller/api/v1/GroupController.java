@@ -27,20 +27,4 @@ public class GroupController {
         Optional<Group> group = groupRepository.findById(id);
         return ResponseEntity.ok().body(group.get());
     }
-    @PostMapping("/group/add")
-    public ResponseEntity<Group> addGroup(@Valid @RequestBody Group group) {
-        Group newGroup =  groupRepository.save(group);
-        return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/group/update")
-    public ResponseEntity<Group> updateGroup(@RequestBody Group group){
-        Group updateGroup = groupRepository.save(group);
-        return new ResponseEntity<>(updateGroup,HttpStatus.OK);
-    }
-    @DeleteMapping("/group/delete/{id}")
-    public ResponseEntity<?> deleteGroup(@PathVariable("id")Integer id) {
-        groupRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
