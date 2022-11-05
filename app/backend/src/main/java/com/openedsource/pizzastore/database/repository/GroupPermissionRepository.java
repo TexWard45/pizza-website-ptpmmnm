@@ -1,7 +1,9 @@
 package com.openedsource.pizzastore.database.repository;
 
-import com.openedsource.pizzastore.database.entity.GroupPermission;
+import com.openedsource.pizzastore.database.entity.GroupPermissionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface GroupPermissionRepository extends JpaRepository<GroupPermission,Integer> {
+@Repository
+public interface GroupPermissionRepository extends JpaRepository<GroupPermissionEntity,Integer> {
 }

@@ -1,14 +1,13 @@
 package com.openedsource.pizzastore.database.entity;
 
 import lombok.Data;
-import org.hibernate.type.descriptor.sql.TinyIntTypeDescriptor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "group_permission")
 @Data
-public class GroupPermission {
+public class GroupPermissionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
