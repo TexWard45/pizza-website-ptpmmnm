@@ -4,7 +4,6 @@ import com.openedsource.pizzastore.constants.Constants;
 import com.openedsource.pizzastore.database.entity.OrderDetailEntity;
 import com.openedsource.pizzastore.database.repository.OrderDetailRepository;
 import com.openedsource.pizzastore.dto.OrderDetailDto;
-import com.openedsource.pizzastore.dto.UserDto;
 import com.openedsource.pizzastore.service.OrderDetailService;
 import com.openedsource.pizzastore.util.ResponseUtils;
 import com.openedsource.pizzastore.util.ValidateUtils;
