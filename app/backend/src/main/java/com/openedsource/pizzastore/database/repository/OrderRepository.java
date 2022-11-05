@@ -1,7 +1,9 @@
 package com.openedsource.pizzastore.database.repository;
 
-import com.openedsource.pizzastore.database.entity.Order;
+import com.openedsource.pizzastore.database.entity.OrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OrderRepository extends JpaRepository<Order,Integer> {
+@Repository
+public interface OrderRepository extends JpaRepository<OrderEntity,Integer> {
 }

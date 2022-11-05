@@ -3,13 +3,12 @@ package com.openedsource.pizzastore.database.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Time;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "order")
 @Data
-public class Order {
+public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
