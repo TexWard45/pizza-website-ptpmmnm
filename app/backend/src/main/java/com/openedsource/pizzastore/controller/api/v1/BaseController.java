@@ -28,31 +28,4 @@ public class BaseController {
         Optional<Base> base = baseRepository.findById(id);
         return ResponseEntity.ok().body(base.get());
     }
-    @PostMapping("/base/add")
-    public ResponseEntity<Base> addBase(@Valid @RequestBody Base base) {
-        Base newBase =  baseRepository.save(base);
-        return new ResponseEntity<>(newBase, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/base/update")
-    public ResponseEntity<Base> updateBase(@RequestBody Base base){
-        Base updateBase = baseRepository.save(base);
-        return new ResponseEntity<>(updateBase,HttpStatus.OK);
-    }
-    @PutMapping("/base/update/{id}")
-    public ResponseEntity<Base> updateBase(@RequestBody Base base,@PathVariable("id")Integer id){
-        Optional<Base> baseOptional = baseRepository.findById(id);
-        if(baseOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        base.setId(id);
-        Base updateBase = baseRepository.save(base);
-        return new ResponseEntity<>(updateBase,HttpStatus.NO_CONTENT);
-    }
-    @DeleteMapping("/base/delete/{id}")
-    public ResponseEntity<?> deleteBase(@PathVariable("id")Integer id) {
-        baseRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
 }
