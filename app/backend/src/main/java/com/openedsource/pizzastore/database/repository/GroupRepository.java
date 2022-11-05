@@ -1,7 +1,9 @@
 package com.openedsource.pizzastore.database.repository;
 
-import com.openedsource.pizzastore.database.entity.Group;
+import com.openedsource.pizzastore.database.entity.GroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface GroupRepository extends JpaRepository<Group,Integer> {
+@Repository
+public interface GroupRepository extends JpaRepository<GroupEntity,Integer> {
 }
