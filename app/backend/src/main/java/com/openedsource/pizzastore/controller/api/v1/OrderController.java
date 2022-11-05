@@ -28,20 +28,4 @@ public class OrderController {
         Optional<Order> order = orderRepository.findById(id);
         return ResponseEntity.ok().body(order.get());
     }
-    @PostMapping("/order/add")
-    public ResponseEntity<Order> addOrder(@Valid @RequestBody Order order) {
-        Order newOrder =  orderRepository.save(order);
-        return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/order/update")
-    public ResponseEntity<Order> updateOrder(@RequestBody Order order){
-        Order updateOrder = orderRepository.save(order);
-        return new ResponseEntity<>(updateOrder,HttpStatus.OK);
-    }
-    @DeleteMapping("/order/delete/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable("id")Integer id) {
-        orderRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
