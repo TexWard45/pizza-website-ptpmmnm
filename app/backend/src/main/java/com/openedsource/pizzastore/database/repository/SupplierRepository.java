@@ -1,7 +1,9 @@
 package com.openedsource.pizzastore.database.repository;
 
-import com.openedsource.pizzastore.database.entity.Supplier;
+import com.openedsource.pizzastore.database.entity.SupplierEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface SupplierRepository extends JpaRepository<Supplier,Integer> {
+@Repository
+public interface SupplierRepository extends JpaRepository<SupplierEntity,Integer> {
 }
