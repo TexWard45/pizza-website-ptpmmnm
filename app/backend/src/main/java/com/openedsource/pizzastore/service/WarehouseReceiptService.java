@@ -12,7 +12,7 @@ import java.util.Optional;
 public class WarehouseReceiptService {
 
     @Autowired
-    WarehouseReceiptRepository warehouseReceiptRepository;
+    private WarehouseReceiptRepository warehouseReceiptRepository;
 
     public void insertWarehouseReceipt(WarehouseReceiptEntity warehouseReceiptEntity) {
 
