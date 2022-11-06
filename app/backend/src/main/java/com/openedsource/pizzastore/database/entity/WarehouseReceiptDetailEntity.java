@@ -11,19 +11,19 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "warehouse_receipt_detail")
 @Data
-public class WarehouseReceiptDetail {
+public class WarehouseReceiptDetailEntity {
 
-    @Id
-    @Column(name = "ingredient_id")
-    private int ingredientid;
+//    @Id
+    @Column(name = "pizza_detail_id")
+    private int pizzadetailid;
 
     @Id
     @Column(name = "warehouse_receipt_id")
     private int warehousereceiptid;
 
-    private String handler;
+    private float price;
 
-    private LocalDate time_created;
+    private int amount;
 
 
 }
