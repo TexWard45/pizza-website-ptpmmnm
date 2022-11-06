@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("internal")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class GroupController {
     @Autowired
@@ -67,7 +67,7 @@ public class GroupController {
     private String inputcheck(GroupDto groupDto) {
 
         if (ValidateUtils.isNullOrEmpty(groupDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[GroupEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();

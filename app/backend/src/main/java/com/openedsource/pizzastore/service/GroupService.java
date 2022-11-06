@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class GroupService {
     @Autowired
-    GroupRepository groupRepository;
+    private GroupRepository groupRepository;
 
     public void insertGroup(GroupEntity groupEntity) {
 
