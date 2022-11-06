@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("internal")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
@@ -72,7 +72,7 @@ public class CategoryController {
     private String inputcheck(CategoryDto categoryDto) {
 
         if (ValidateUtils.isNullOrEmpty(categoryDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[CategoryEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class CategoryService {
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
     public void insertCategory(CategoryEntity categoryEntity) {
 
         Optional<CategoryEntity> category = categoryRepository.findById(categoryEntity.getId());
