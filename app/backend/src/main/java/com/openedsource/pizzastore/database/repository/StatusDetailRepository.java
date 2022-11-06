@@ -1,7 +1,9 @@
 package com.openedsource.pizzastore.database.repository;
 
-import com.openedsource.pizzastore.database.entity.StatusDetail;
+import com.openedsource.pizzastore.database.entity.StatusDetailEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface StatusDetailRepository extends JpaRepository<StatusDetail,Integer> {
+@Repository
+public interface StatusDetailRepository extends JpaRepository<StatusDetailEntity,Integer> {
 }

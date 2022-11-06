@@ -11,14 +11,14 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "status_detail")
 @Data
-public class StatusDetail {
+public class StatusDetailEntity {
     @Id
     @Column(name = "order_id")
     private int orderid;
 
-    @Id
     @Column(name = "status_id")
     private int statusid;
 
-    private LocalDate time_created;
+    @Column(name = "time_created")
+    private LocalDate timecreated;
 }
