@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "pizza_detail")
 @Data
-public class PizzaDetail {
+public class PizzaDetailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,5 @@ public class PizzaDetail {
     private float price;
 
     private int quantity;
-
-
 
 }
