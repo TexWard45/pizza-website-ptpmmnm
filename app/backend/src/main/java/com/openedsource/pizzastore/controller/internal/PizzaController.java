@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class PizzaController {
 
@@ -69,7 +69,7 @@ public class PizzaController {
     private String inputcheck(PizzaDto pizzaDto) {
 
         if (ValidateUtils.isNullOrEmpty(pizzaDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[PizzaEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();
