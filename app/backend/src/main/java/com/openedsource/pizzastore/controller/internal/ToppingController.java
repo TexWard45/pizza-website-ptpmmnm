@@ -66,7 +66,7 @@ public class ToppingController {
     private String inputcheck(ToppingDto toppingDto) {
 
         if (ValidateUtils.isNullOrEmpty(toppingDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[ToppingEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();
