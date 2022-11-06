@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("internal")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class OrderDetailController {
 
@@ -71,7 +71,7 @@ public class OrderDetailController {
     private String inputcheck(OrderDetailDto orderDetailDto) {
 
         if (ValidateUtils.isNullOrEmpty(orderDetailDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[OrderDetailEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();
