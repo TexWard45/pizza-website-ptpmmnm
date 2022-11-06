@@ -14,7 +14,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class SupplierController {
     @Autowired
-    SupplierRepository supplierRepository;
+    private SupplierRepository supplierRepository;
 
     @GetMapping("/supplier")
     public ResponseEntity<List<SupplierEntity>> getSupplierList(){

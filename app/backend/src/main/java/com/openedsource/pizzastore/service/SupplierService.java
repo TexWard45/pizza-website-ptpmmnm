@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class SupplierService {
     @Autowired
-    SupplierRepository supplierRepository;
+    private SupplierRepository supplierRepository;
 
     public void insertSupplier(SupplierEntity supplierEntity) {
 
