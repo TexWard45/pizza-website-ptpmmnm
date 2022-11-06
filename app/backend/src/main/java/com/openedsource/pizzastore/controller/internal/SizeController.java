@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("internal")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class SizeController {
     @Autowired
@@ -67,7 +67,7 @@ public class SizeController {
     private String inputcheck(SizeDto sizeDto) {
 
         if (ValidateUtils.isNullOrEmpty(sizeDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[SizeEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();

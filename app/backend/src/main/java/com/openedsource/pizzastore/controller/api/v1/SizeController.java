@@ -17,7 +17,7 @@ import java.util.Optional;
 public class SizeController {
 
     @Autowired
-    SizeRepository sizeRepository;
+    private SizeRepository sizeRepository;
 
     @GetMapping("/size")
     public ResponseEntity<List<SizeEntity>> getSizeList(){
