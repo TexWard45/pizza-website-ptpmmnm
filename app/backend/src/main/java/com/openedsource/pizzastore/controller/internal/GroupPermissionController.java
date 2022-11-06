@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("internal")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class GroupPermissionController {
     @Autowired
