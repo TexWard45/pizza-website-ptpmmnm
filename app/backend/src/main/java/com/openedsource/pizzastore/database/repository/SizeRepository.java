@@ -1,7 +1,9 @@
 package com.openedsource.pizzastore.database.repository;
 
-import com.openedsource.pizzastore.database.entity.Size;
+import com.openedsource.pizzastore.database.entity.SizeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface SizeRepository extends JpaRepository<Size,Integer> {
+@Repository
+public interface SizeRepository extends JpaRepository<SizeEntity,Integer> {
 }
