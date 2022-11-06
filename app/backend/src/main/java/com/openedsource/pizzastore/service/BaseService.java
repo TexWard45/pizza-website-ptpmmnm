@@ -10,7 +10,7 @@ import java.util.Optional;
 @Service
 public class BaseService {
     @Autowired
-    BaseRepository baseRepository;
+    private BaseRepository baseRepository;
 
     public void insertBase(BaseEntity baseEntity) {
 
