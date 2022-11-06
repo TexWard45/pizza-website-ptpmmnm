@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("internal")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class PizzaDetailController {
     @Autowired
@@ -67,7 +67,7 @@ public class PizzaDetailController {
     private String inputcheck(PizzaDetailDto pizzaDetailDto) {
 
         if (ValidateUtils.isNullOrEmpty(pizzaDetailDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[PizzaDetailEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();
