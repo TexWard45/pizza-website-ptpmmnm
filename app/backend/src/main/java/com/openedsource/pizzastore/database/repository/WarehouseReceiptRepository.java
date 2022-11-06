@@ -1,7 +1,9 @@
 package com.openedsource.pizzastore.database.repository;
 
-import com.openedsource.pizzastore.database.entity.WarehouseReceipt;
+import com.openedsource.pizzastore.database.entity.WarehouseReceiptEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface WarehouseReceiptRepository extends JpaRepository<WarehouseReceipt,Integer> {
+@Repository
+public interface WarehouseReceiptRepository extends JpaRepository<WarehouseReceiptEntity,Integer> {
 }
