@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class StatusService {
     @Autowired
-    StatusRepository statusRepository;
+    private StatusRepository statusRepository;
 
     public void insertStatus(StatusEntity statusEntity) {
 

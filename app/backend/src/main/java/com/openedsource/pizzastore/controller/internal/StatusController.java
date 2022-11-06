@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("internal")
+@RequestMapping("/internal")
 @CrossOrigin(origins = "*")
 public class StatusController {
     @Autowired
@@ -67,7 +67,7 @@ public class StatusController {
     private String inputcheck(StatusDto statusDto) {
 
         if (ValidateUtils.isNullOrEmpty(statusDto)) {
-            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[UserEntity]";
+            return Constants.MessageString.PARAMETER_ERROR.getMessage() + "[StatusEntity]";
         }
 
         StringBuilder errorField = new StringBuilder();
