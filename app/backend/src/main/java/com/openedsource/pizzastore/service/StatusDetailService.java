@@ -12,7 +12,7 @@ import java.util.Optional;
 public class StatusDetailService {
 
     @Autowired
-    StatusDetailRepository statusDetailRepository;
+    private StatusDetailRepository statusDetailRepository;
 
     public void insertStatusDetail(StatusDetailEntity statusDetailEntity) {
 

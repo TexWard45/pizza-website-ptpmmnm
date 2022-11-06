@@ -14,7 +14,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class StatusDetailController {
     @Autowired
-    StatusDetailRepository statusDetailRepository;
+    private StatusDetailRepository statusDetailRepository;
 
     @GetMapping("/statusdetail")
     public ResponseEntity<List<StatusDetailEntity>> getStatusDetailList(){
