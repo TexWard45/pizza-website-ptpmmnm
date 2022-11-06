@@ -10,7 +10,7 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     public void insertOrder(OrderEntity orderEntity) {
 
