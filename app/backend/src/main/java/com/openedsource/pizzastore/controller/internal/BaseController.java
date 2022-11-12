@@ -35,6 +35,7 @@ public class BaseController {
 
             try {
                 baseService.insertBase(baseEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -51,9 +52,14 @@ public class BaseController {
         if (ValidateUtils.isNullOrEmpty(message)) {
             BaseEntity baseEntity = new BaseEntity();
             BeanUtils.copyProperties(baseDto, baseEntity);
+            if (baseRepository.findById(baseEntity.getId()).isPresent()) {
+                baseService.updateBase(baseEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
 
-            baseService.updateBase(baseEntity);
-
+            } else {
+                baseService.updateBase(baseEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
         }
@@ -62,8 +68,16 @@ public class BaseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBase(@PathVariable("id") Integer id) {
-        baseRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+
+        if (baseRepository.findById(id).isPresent()) {
+            baseRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+
+        }else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Base was not found");
+        }
+            return response;
     }
 
     private String inputcheck(BaseDto baseDto) {
