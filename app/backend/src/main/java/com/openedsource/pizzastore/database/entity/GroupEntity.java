@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "group")
+@Table(name = "groups")
 @Data
 public class GroupEntity {
     @Id

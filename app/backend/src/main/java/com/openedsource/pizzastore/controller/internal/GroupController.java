@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/group")
 @CrossOrigin(origins = "*")
 public class GroupController {
     @Autowired
@@ -23,7 +23,7 @@ public class GroupController {
     @Autowired
     private GroupService groupService;
 
-    @PostMapping("/group/add")
+    @PostMapping
     public ResponseEntity<Object> addGroup(@RequestBody GroupDto groupDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(groupDto);
@@ -33,6 +33,7 @@ public class GroupController {
 
             try {
                 groupService.insertGroup(groupEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -42,15 +43,20 @@ public class GroupController {
         return response;
     }
 
-    @PutMapping("/group/update")
+    @PutMapping
     public ResponseEntity<Object> updateGroup(@RequestBody(required = false) GroupDto groupDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(groupDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             GroupEntity groupEntity = new GroupEntity();
             BeanUtils.copyProperties(groupDto, groupEntity);
-
-            groupService.updateGroup(groupEntity);
+            if (groupRepository.findById(groupEntity.getId()).isPresent()) {
+                groupService.updateGroup(groupEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                groupService.updateGroup(groupEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
 
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
@@ -58,10 +64,17 @@ public class GroupController {
         return response;
     }
 
-    @DeleteMapping("/group/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGroup(@PathVariable("id") Integer id) {
-        groupRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (groupRepository.findById(id).isPresent()) {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+
+            groupRepository.deleteById(id);
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Group was not found");
+        }
+        return response;
     }
 
     private String inputcheck(GroupDto groupDto) {
