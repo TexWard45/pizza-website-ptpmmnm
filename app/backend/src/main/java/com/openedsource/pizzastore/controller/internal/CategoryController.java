@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/category")
 @CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
@@ -27,7 +27,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/category/add")
+    @PostMapping
     public ResponseEntity<Object> addCategory(@RequestBody(required = false) CategoryDto categoryDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(categoryDto);
@@ -38,6 +38,7 @@ public class CategoryController {
 
             try {
                 categoryService.insertCategory(categoryEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -47,26 +48,37 @@ public class CategoryController {
         return response;
     }
 
-    @PutMapping("/category/update")
+    @PutMapping
     public ResponseEntity<Object> updateCategory(@RequestBody(required = false) CategoryDto categoryDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(categoryDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             CategoryEntity categoryEntity = new CategoryEntity();
-            BeanUtils.copyProperties(categoryDto, categoryDto);
-
-            categoryService.updateCategory(categoryEntity);
-
+            BeanUtils.copyProperties(categoryDto, categoryEntity);
+            if (categoryRepository.findById(categoryEntity.getId()).isPresent()) {
+                categoryService.updateCategory(categoryEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                categoryService.updateCategory(categoryEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
         }
         return response;
     }
 
-    @DeleteMapping("/category/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable("id") Integer id) {
-        categoryRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (categoryRepository.findById(id).isPresent()) {
+            categoryRepository.deleteById(id);
+//            return new ResponseEntity<>(HttpStatus.OK);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Category was not found");
+        }
+        return response;
     }
 
     private String inputcheck(CategoryDto categoryDto) {

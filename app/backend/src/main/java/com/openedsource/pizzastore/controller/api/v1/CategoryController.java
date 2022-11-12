@@ -9,18 +9,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/category")
 @CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @GetMapping("/category")
+    @GetMapping
     public ResponseEntity<List<CategoryEntity>> getCategoryList(){
         List<CategoryEntity> categoryList = categoryRepository.findAll();
         return ResponseEntity.ok().body(categoryList);
     }
-    @GetMapping("/category/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getCategory(@PathVariable(name = "id") Integer id){
         Optional<CategoryEntity> category = categoryRepository.findById(id);
         return ResponseEntity.ok().body(category.get());
