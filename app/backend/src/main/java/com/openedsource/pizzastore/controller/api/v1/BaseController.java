@@ -10,20 +10,21 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/base")
 @CrossOrigin(origins = "*")
 public class BaseController {
 
     @Autowired
     private BaseRepository baseRepository;
 
-    @GetMapping("/base")
-    public ResponseEntity<List<BaseEntity>> getBaseList(){
+    @GetMapping
+    public ResponseEntity<List<BaseEntity>> getBaseList() {
         List<BaseEntity> baseList = baseRepository.findAll();
         return ResponseEntity.ok().body(baseList);
     }
-    @GetMapping("/base/{id}")
-    public ResponseEntity<Object> getBase(@PathVariable(name = "id") Integer id){
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getBase(@PathVariable(name = "id") Integer id) {
         Optional<BaseEntity> base = baseRepository.findById(id);
         return ResponseEntity.ok().body(base.get());
     }

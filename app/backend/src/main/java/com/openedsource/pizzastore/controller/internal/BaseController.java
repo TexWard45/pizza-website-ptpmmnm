@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/base")
 @CrossOrigin(origins = "*")
 public class BaseController {
 
@@ -24,7 +24,7 @@ public class BaseController {
     @Autowired
     private BaseService baseService;
 
-    @PostMapping("/base/add")
+    @PostMapping
     public ResponseEntity<Object> addBase(@RequestBody(required = false) BaseDto baseDto) {
 
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
@@ -44,7 +44,7 @@ public class BaseController {
         return response;
     }
 
-    @PutMapping("/base/update")
+    @PutMapping
     public ResponseEntity<Object> updateBase(@RequestBody(required = false) BaseDto baseDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(baseDto);
@@ -60,7 +60,7 @@ public class BaseController {
         return response;
     }
 
-    @DeleteMapping("/base/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBase(@PathVariable("id") Integer id) {
         baseRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
