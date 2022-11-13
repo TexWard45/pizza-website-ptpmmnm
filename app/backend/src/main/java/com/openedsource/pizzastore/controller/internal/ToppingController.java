@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/topping")
 @CrossOrigin(origins = "*")
 public class ToppingController {
     @Autowired
@@ -23,7 +23,7 @@ public class ToppingController {
     @Autowired
     private ToppingService toppingService;
 
-    @PostMapping("/topping/add")
+    @PostMapping
     public ResponseEntity<Object> addTopping(@RequestBody(required = false) ToppingDto toppingDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(toppingDto);
@@ -33,6 +33,7 @@ public class ToppingController {
 
             try {
                 toppingService.insertTopping(toppingEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -42,25 +43,37 @@ public class ToppingController {
         return response;
     }
 
-    @PutMapping("/topping/update")
-    public ResponseEntity<Object> updateTopping(@RequestBody(required = false) ToppingDto toppingDto){
+    @PutMapping
+    public ResponseEntity<Object> updateTopping(@RequestBody(required = false) ToppingDto toppingDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(toppingDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             ToppingEntity toppingEntity = new ToppingEntity();
             BeanUtils.copyProperties(toppingDto, toppingEntity);
-
-            toppingService.updateTopping(toppingEntity);
-
+            if (toppingRepository.findById(toppingEntity.getId()).isPresent()) {
+                toppingService.updateTopping(toppingEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                toppingService.updateTopping(toppingEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
         }
         return response;
     }
-    @DeleteMapping("/topping/delete/{id}")
-    public ResponseEntity<?> deleteTopping(@PathVariable("id")Integer id) {
-        toppingRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTopping(@PathVariable("id") Integer id) {
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (toppingRepository.findById(id).isPresent()) {
+            toppingRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Topping was not found");
+        }
+        return response;
     }
 
     private String inputcheck(ToppingDto toppingDto) {

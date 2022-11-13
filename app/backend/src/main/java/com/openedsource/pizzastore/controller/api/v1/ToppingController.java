@@ -12,18 +12,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/topping")
 @CrossOrigin(origins = "*")
 public class ToppingController {
     @Autowired
     private ToppingRepository toppingRepository;
 
-    @GetMapping("/topping")
+    @GetMapping
     public ResponseEntity<List<ToppingEntity>> getToppingList(){
         List<ToppingEntity> toppingList = toppingRepository.findAll();
         return ResponseEntity.ok().body(toppingList);
     }
-    @GetMapping("/topping/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getTopping(@PathVariable(name = "id") Integer id){
         Optional<ToppingEntity> topping = toppingRepository.findById(id);
         return ResponseEntity.ok().body(topping.get());
