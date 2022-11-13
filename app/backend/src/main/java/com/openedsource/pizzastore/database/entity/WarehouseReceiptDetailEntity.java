@@ -2,10 +2,7 @@ package com.openedsource.pizzastore.database.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -13,17 +10,16 @@ import java.time.LocalDate;
 @Data
 public class WarehouseReceiptDetailEntity {
 
-//    @Id
-    @Column(name = "pizza_detail_id")
-    private int pizzadetailid;
-
     @Id
-    @Column(name = "warehouse_receipt_id")
-    private int warehousereceiptid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private int pizza_detail_id;
+
+    private int warehouse_receipt_id;
 
     private float price;
 
-    private int amount;
-
+    private int quantity;
 
 }

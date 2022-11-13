@@ -15,7 +15,7 @@ public class WarehouseReceiptDetailService {
 
     public void insertWarehouseReceiptDetail(WarehouseReceiptDetailEntity warehouseReceiptDetailEntity) {
 
-        Optional<WarehouseReceiptDetailEntity> warehouseReceiptDetail = warehouseReceiptDetailRepository.findById(warehouseReceiptDetailEntity.getWarehousereceiptid());
+        Optional<WarehouseReceiptDetailEntity> warehouseReceiptDetail = warehouseReceiptDetailRepository.findById(warehouseReceiptDetailEntity.getId());
         if (warehouseReceiptDetail.isPresent()) {
             throw new DuplicateKeyException(null);
         }

@@ -5,11 +5,13 @@ import lombok.Data;
 @Data
 public class WarehouseReceiptDetailDto {
 
-    private int pizzadetailid;
+    private int id;
 
-    private int warehousereceiptid;
+    private int pizza_detail_id;
+
+    private int warehouse_receipt_id;
 
     private float price;
 
-    private int amount;
+    private int quantity;
 }
