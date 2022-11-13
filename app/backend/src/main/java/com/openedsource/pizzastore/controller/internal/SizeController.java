@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/size")
 @CrossOrigin(origins = "*")
 public class SizeController {
     @Autowired
@@ -23,7 +23,7 @@ public class SizeController {
     @Autowired
     private SizeService sizeService;
 
-    @PostMapping("/size/add")
+    @PostMapping
     public ResponseEntity<Object> addSize(@RequestBody SizeDto sizeDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(sizeDto);
@@ -33,6 +33,8 @@ public class SizeController {
 
             try {
                 sizeService.insertSize(sizeEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -42,15 +44,21 @@ public class SizeController {
         return response;
     }
 
-    @PutMapping("/size/update")
+    @PutMapping
     public ResponseEntity<Object> updateSize(@RequestBody SizeDto sizeDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(sizeDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             SizeEntity sizeEntity = new SizeEntity();
             BeanUtils.copyProperties(sizeDto, sizeEntity);
+            if (sizeRepository.findById(sizeEntity.getId()).isPresent()) {
+                sizeService.updateSize(sizeEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                sizeService.updateSize(sizeEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
 
-            sizeService.updateSize(sizeEntity);
 
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
@@ -58,10 +66,17 @@ public class SizeController {
         return response;
     }
 
-    @DeleteMapping("/size/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSize(@PathVariable("id") Integer id) {
-        sizeRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (sizeRepository.findById(id).isPresent()) {
+            sizeRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Category was not found");
+        }
+        return response;
+
     }
 
     private String inputcheck(SizeDto sizeDto) {
@@ -79,7 +94,7 @@ public class SizeController {
         }
         if (ValidateUtils.isNullOrEmpty(sizeDto.getPriority()) && ValidateUtils.isFullWidthDigit(String.valueOf(sizeDto.getPriority()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Priority" : ",Priority"));
-//            errorField.append((ValidateUtils.isFullWidthDigit(String.valueOf(errorField))? "Priority":",Priority"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "Priority" : ",Priority"));
         }
         String message = "";
         if (!ValidateUtils.isNullOrEmpty((errorField.toString()))) {

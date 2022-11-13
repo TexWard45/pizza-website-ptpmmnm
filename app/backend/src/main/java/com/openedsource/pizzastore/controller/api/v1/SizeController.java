@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/size")
 @CrossOrigin(origins = "*")
 public class SizeController {
 
     @Autowired
     private SizeRepository sizeRepository;
 
-    @GetMapping("/size")
+    @GetMapping
     public ResponseEntity<List<SizeEntity>> getSizeList(){
         List<SizeEntity> sizeList = sizeRepository.findAll();
         return ResponseEntity.ok().body(sizeList);
     }
-    @GetMapping("/size/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getSize(@PathVariable(name = "id") Integer id){
         Optional<SizeEntity> size = sizeRepository.findById(id);
         return ResponseEntity.ok().body(size.get());
