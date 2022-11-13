@@ -2,6 +2,7 @@ package com.openedsource.pizzastore.service;
 
 import com.openedsource.pizzastore.database.entity.OrderDetailEntity;
 import com.openedsource.pizzastore.database.repository.OrderDetailRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 @Service
 public class OrderDetailService {
-
+    @Autowired
     private OrderDetailRepository orderDetailRepository;
 
     public void insertOrderDetail(OrderDetailEntity orderDetailEntity) {

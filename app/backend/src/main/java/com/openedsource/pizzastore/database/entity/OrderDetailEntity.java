@@ -13,11 +13,9 @@ public class OrderDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "order_id")
-    private int orderid;
+    private int order_id;
 
-    @Column(name = "pizza_detail_id")
-    private int pizzadetailid;
+    private int pizza_detail_id;
 
     private float price;
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/orderdetail")
 @CrossOrigin(origins = "*")
 public class OrderDetailController {
 
@@ -26,7 +26,7 @@ public class OrderDetailController {
     @Autowired
     private OrderDetailService orderDetailService;
 
-    @PostMapping("/orderdetail/add")
+    @PostMapping
     public ResponseEntity<Object> addOrderDetail(@RequestBody(required = false) OrderDetailDto orderDetailDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(orderDetailDto);
@@ -36,6 +36,8 @@ public class OrderDetailController {
 
             try {
                 orderDetailService.insertOrderDetail(orderDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -45,15 +47,20 @@ public class OrderDetailController {
         return response;
     }
 
-    @PutMapping("/orderdetail/update")
+    @PutMapping
     public ResponseEntity<Object> updateOrderDetail(@RequestBody(required = false) OrderDetailDto orderDetailDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(orderDetailDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
             BeanUtils.copyProperties(orderDetailDto, orderDetailEntity);
-
-            orderDetailService.updateOrderDetail(orderDetailEntity);
+            if (orderDetailRepository.findById(orderDetailEntity.getId()).isPresent()) {
+                orderDetailService.updateOrderDetail(orderDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                orderDetailService.updateOrderDetail(orderDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
 
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
@@ -62,10 +69,17 @@ public class OrderDetailController {
 
     }
 
-    @DeleteMapping("/orderdetail/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrderDetail(@PathVariable("id") Integer id) {
-        orderDetailRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (orderDetailRepository.findById(id).isPresent()) {
+            orderDetailRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Order Detail was not found");
+        }
+        return response;
+
     }
 
     private String inputcheck(OrderDetailDto orderDetailDto) {
@@ -78,10 +92,10 @@ public class OrderDetailController {
         if (ValidateUtils.isNullOrEmpty(orderDetailDto.getId())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Id" : ",Id"));
         }
-        if (ValidateUtils.isNullOrEmpty(orderDetailDto.getOrderid()) && ValidateUtils.isFullWidthDigit(String.valueOf(orderDetailDto.getOrderid()))) {
+        if (ValidateUtils.isNullOrEmpty(orderDetailDto.getOrder_id()) && ValidateUtils.isFullWidthDigit(String.valueOf(orderDetailDto.getOrder_id()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "OrderId" : ",OrderId"));
         }
-        if (ValidateUtils.isNullOrEmpty(orderDetailDto.getPizzadetailid()) && ValidateUtils.isFullWidthDigit(String.valueOf(orderDetailDto.getPizzadetailid()))) {
+        if (ValidateUtils.isNullOrEmpty(orderDetailDto.getPizza_detail_id()) && ValidateUtils.isFullWidthDigit(String.valueOf(orderDetailDto.getPizza_detail_id()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "PizzaDetailId" : ",PizzaDetailId"));
         }
         if (ValidateUtils.isNullOrEmpty(orderDetailDto.getPrice())) {
