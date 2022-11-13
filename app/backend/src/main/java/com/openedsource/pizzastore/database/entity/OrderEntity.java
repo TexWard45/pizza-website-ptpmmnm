@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Data
 public class OrderEntity {
     @Id
@@ -19,7 +19,6 @@ public class OrderEntity {
     @Column(length = 32)
     private String handler;
 
-
     private float total_price;
 
     private int quantity;
@@ -30,6 +29,8 @@ public class OrderEntity {
 
     @Column(length = 10)
     private String phone;
+
+    private String email;
 
     private int payment_type;
 

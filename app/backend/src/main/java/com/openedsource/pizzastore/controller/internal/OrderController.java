@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/order")
 @CrossOrigin(origins = "*")
 public class OrderController {
 
@@ -27,7 +27,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/order/add")
+    @PostMapping
     public ResponseEntity<Object> addOrder(@RequestBody(required = false) OrderDto orderDto) {
 
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
@@ -38,6 +38,8 @@ public class OrderController {
 
             try {
                 orderService.insertOrder(orderEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -47,15 +49,20 @@ public class OrderController {
         return response;
     }
 
-    @PutMapping("/order/update")
+    @PutMapping
     public ResponseEntity<Object> updateOrder(@RequestBody(required = false) OrderDto orderDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(orderDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             OrderEntity orderEntity = new OrderEntity();
             BeanUtils.copyProperties(orderDto, orderEntity);
-
-            orderService.updateOrder(orderEntity);
+            if (orderRepository.findById(orderEntity.getId()).isPresent()) {
+                orderService.updateOrder(orderEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                orderService.updateOrder(orderEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
 
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
@@ -63,10 +70,17 @@ public class OrderController {
         return response;
     }
 
-    @DeleteMapping("/order/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable("id") Integer id) {
-        orderRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (orderRepository.findById(id).isPresent()) {
+            orderRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Order was not found");
+        }
+        return response;
+
     }
 
     private String inputcheck(OrderDto orderDto) {
@@ -100,15 +114,18 @@ public class OrderController {
         if (ValidateUtils.isNullOrEmpty(orderDto.getPhone()) && ValidateUtils.isFullWidthDigit(orderDto.getPhone())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Phone" : ",Phone"));
         }
+        if (ValidateUtils.isNullOrEmpty(orderDto.getEmail())) {
+            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Email" : ",Email"));
+        }
         if (ValidateUtils.isNullOrEmpty(orderDto.getPayment_type()) && ValidateUtils.isFullWidthDigit(String.valueOf(orderDto.getPayment_type()))) {
-            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Payment_type" : ",Payment_type"));
+            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Payment Type" : ",Payment Type"));
         }
         if (ValidateUtils.isNullOrEmpty(orderDto.getOrder_type()) && ValidateUtils.isFullWidthDigit(String.valueOf(orderDto.getOrder_type()))) {
-            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Order_type" : ",Order_type"));
+            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Order Type" : ",Order Type"));
         }
-        if (ValidateUtils.isNullOrEmpty(orderDto.getOrdertime())) {
-            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Ordertime" : ",Ordertime"));
-        }
+//        if (ValidateUtils.isNullOrEmpty(orderDto.getOrdertime())) {
+//            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Order Time" : ",Order Time"));
+//        }
         if (ValidateUtils.isNullOrEmpty(orderDto.getNote())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Note" : ",Note"));
         }
@@ -120,10 +137,6 @@ public class OrderController {
         return message;
     }
 }
-
-
-
-
 
 
 //    @PutMapping("/order/update/{id}")

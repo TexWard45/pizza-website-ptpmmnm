@@ -20,6 +20,8 @@ public class OrderDto {
 
     private String phone;
 
+    private String email;
+
     private int payment_type;
 
     private int order_type;

@@ -10,19 +10,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/order")
 @CrossOrigin(origins = "*")
 public class OrderController {
 
     @Autowired
     private OrderRepository orderRepository;
 
-    @GetMapping("/order")
+    @GetMapping
     public ResponseEntity<List<OrderEntity>> getOrderList(){
         List<OrderEntity> orderList = orderRepository.findAll();
         return ResponseEntity.ok().body(orderList);
     }
-    @GetMapping("/order/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getOrder(@PathVariable(name = "id") Integer id){
         Optional<OrderEntity> order = orderRepository.findById(id);
         return ResponseEntity.ok().body(order.get());
