@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/supplier")
 @CrossOrigin(origins = "*")
 public class SupplierController {
     @Autowired
@@ -25,7 +25,7 @@ public class SupplierController {
     @Autowired
     private SupplierService supplierService;
 
-    @PostMapping("/supplier/add")
+    @PostMapping
     public ResponseEntity<Object> addSupplier(@RequestBody(required = false) SupplierDto supplierDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(supplierDto);
@@ -35,6 +35,7 @@ public class SupplierController {
 
             try {
                 supplierService.insertSupplier(supplierEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -44,26 +45,35 @@ public class SupplierController {
         return response;
     }
 
-    @PutMapping("/supplier/update")
+    @PutMapping
     public ResponseEntity<Object> updateSupplier(@RequestBody(required = false) SupplierDto supplierDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(supplierDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             SupplierEntity supplierEntity = new SupplierEntity();
             BeanUtils.copyProperties(supplierDto, supplierEntity);
-
-            supplierService.updateSupplier(supplierEntity);
-
+            if (supplierRepository.findById(supplierEntity.getId()).isPresent()) {
+                supplierService.updateSupplier(supplierEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                supplierService.updateSupplier(supplierEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
         }
         return response;
     }
 
-    @DeleteMapping("/supplier/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSupplier(@PathVariable("id") Integer id) {
-        supplierRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (supplierRepository.findById(id).isPresent()){
+        supplierRepository.deleteById(id);response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Supplier was not found");
+        }
+        return response;
     }
 
     private String inputcheck(SupplierDto supplierDto) {
@@ -82,9 +92,12 @@ public class SupplierController {
         if (ValidateUtils.isNullOrEmpty(supplierDto.getAddress())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Address" : ",Address"));
         }
-        if (ValidateUtils.isNullOrEmpty(supplierDto.getPhone()) && ValidateUtils.isFullWidthDigit(supplierDto.getPhone()))
-        {
+        if (ValidateUtils.isNullOrEmpty(supplierDto.getPhone()) && ValidateUtils.isFullWidthDigit(supplierDto.getPhone())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Phone" : ",Phone"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "Phone" : ",Phone"));
+        }
+        if (ValidateUtils.isNullOrEmpty(supplierDto.getFax())) {
+            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Fax" : ",Fax"));
         }
         if (ValidateUtils.isTel(supplierDto.getEmail())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Email" : ",Email"));

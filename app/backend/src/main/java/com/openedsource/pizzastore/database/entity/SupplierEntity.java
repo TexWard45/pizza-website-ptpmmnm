@@ -19,6 +19,9 @@ public class SupplierEntity {
     @Column(length = 10)
     private String phone;
 
+    @Column(length = 10)
+    private String fax;
+
     private String email;
 }
 

@@ -10,18 +10,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/supplier")
 @CrossOrigin(origins = "*")
 public class SupplierController {
     @Autowired
     private SupplierRepository supplierRepository;
 
-    @GetMapping("/supplier")
+    @GetMapping
     public ResponseEntity<List<SupplierEntity>> getSupplierList(){
         List<SupplierEntity> supplierList = supplierRepository.findAll();
         return ResponseEntity.ok().body(supplierList);
     }
-    @GetMapping("/supplier/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getSupplier(@PathVariable(name = "id") Integer id){
         Optional<SupplierEntity> supplier = supplierRepository.findById(id);
         return ResponseEntity.ok().body(supplier.get());
