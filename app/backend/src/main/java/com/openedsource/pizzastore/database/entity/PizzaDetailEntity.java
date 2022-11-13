@@ -13,14 +13,11 @@ public class PizzaDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "pizza_id")
-    private int pizzaid;
+    private int pizza_id;
 
-    @Column(name = "size_id")
-    private int sizeid;
+    private int size_id;
 
-    @Column(name = "base_id")
-    private int baseid;
+    private int base_id;
 
     private float price;
 

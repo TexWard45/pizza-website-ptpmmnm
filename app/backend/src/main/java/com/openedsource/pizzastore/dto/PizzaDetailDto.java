@@ -7,11 +7,11 @@ public class PizzaDetailDto {
 
     private int id;
 
-    private int pizzaid;
+    private int pizza_id;
 
-    private int sizeid;
+    private int size_id;
 
-    private int baseid;
+    private int base_id;
 
     private float price;
 

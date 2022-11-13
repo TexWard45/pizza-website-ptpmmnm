@@ -13,18 +13,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/pizzadetail")
 @CrossOrigin(origins = "*")
 public class PizzaDetailController {
     @Autowired
     private PizzaDetailRepository pizzaDetailRepository;
 
-    @GetMapping("/pizzadetail")
+    @GetMapping
     public ResponseEntity<List<PizzaDetailEntity>> getPizzaDetailList(){
         List<PizzaDetailEntity> pizzaDetailList = pizzaDetailRepository.findAll();
         return ResponseEntity.ok().body(pizzaDetailList);
     }
-    @GetMapping("/pizzadetail/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getPizzaDetail(@PathVariable(name = "id") Integer id){
         Optional<PizzaDetailEntity> pizzaDetail = pizzaDetailRepository.findById(id);
         return ResponseEntity.ok().body(pizzaDetail.get());

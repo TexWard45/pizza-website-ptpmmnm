@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/pizzadetail")
 @CrossOrigin(origins = "*")
 public class PizzaDetailController {
     @Autowired
@@ -25,7 +25,7 @@ public class PizzaDetailController {
     @Autowired
     private PizzaDetailService pizzaDetailService;
 
-    @PostMapping("/pizzadetail/add")
+    @PostMapping
     public ResponseEntity<Object> addPizzaDetail(@RequestBody(required = false) PizzaDetailDto pizzaDetailDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(pizzaDetailDto);
@@ -35,6 +35,8 @@ public class PizzaDetailController {
 
             try {
                 pizzaDetailService.insertPizzaDetail(pizzaDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -44,26 +46,40 @@ public class PizzaDetailController {
         return response;
     }
 
-    @PutMapping("/pizzadetail/update")
-    public ResponseEntity<Object> updatePizzaDetail(@RequestBody(required = false) PizzaDetailDto pizzaDetailDto){
+    @PutMapping
+    public ResponseEntity<Object> updatePizzaDetail(@RequestBody(required = false) PizzaDetailDto pizzaDetailDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(pizzaDetailDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             PizzaDetailEntity pizzaDetailEntity = new PizzaDetailEntity();
             BeanUtils.copyProperties(pizzaDetailDto, pizzaDetailEntity);
+            if (pizzaDetailRepository.findById(pizzaDetailEntity.getId()).isPresent()) {
+                pizzaDetailService.updatePizzaDetail(pizzaDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                pizzaDetailService.updatePizzaDetail(pizzaDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
 
-            pizzaDetailService.updatePizzaDetail(pizzaDetailEntity);
-
+            }
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
         }
         return response;
     }
-    @DeleteMapping("/pizzadetail/delete/{id}")
-    public ResponseEntity<?> deletePizzaDetail(@PathVariable("id")Integer id) {
-        pizzaDetailRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePizzaDetail(@PathVariable("id") Integer id) {
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (pizzaDetailRepository.findById(id).isPresent()) {
+            pizzaDetailRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "PizzaDetail was not found");
+        }
+        return response;
+
     }
+
     private String inputcheck(PizzaDetailDto pizzaDetailDto) {
 
         if (ValidateUtils.isNullOrEmpty(pizzaDetailDto)) {
@@ -74,17 +90,24 @@ public class PizzaDetailController {
         if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getId())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Id" : ",Id"));
         }
-        if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getSizeid()) && ValidateUtils.isFullWidthDigit(String.valueOf(pizzaDetailDto.getSizeid()))) {
+        if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getSize_id()) && ValidateUtils.isFullWidthDigit(String.valueOf(pizzaDetailDto.getSize_id()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "SizeId" : ",SizeId"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "SizeId" : ",SizeId"));
         }
-        if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getPizzaid()) && ValidateUtils.isFullWidthDigit(String.valueOf(pizzaDetailDto.getPizzaid()))) {
+        if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getPizza_id()) && ValidateUtils.isFullWidthDigit(String.valueOf(pizzaDetailDto.getPizza_id()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "PizzaId" : ",PizzaId"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "PizzaId" : ",PizzaId"));
+        }
+        if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getBase_id()) && ValidateUtils.isFullWidthDigit(String.valueOf(pizzaDetailDto.getBase_id()))) {
+            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "BaseId" : ",BaseId"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "BaseId" : ",BaseId"));
         }
         if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getPrice())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Price" : ",Price"));
         }
         if (ValidateUtils.isNullOrEmpty(pizzaDetailDto.getQuantity()) && ValidateUtils.isFullWidthDigit(String.valueOf(pizzaDetailDto.getQuantity()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Quantity" : ",Quantity"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "Quantity" : ",Quantity"));
         }
 
         String message = "";
