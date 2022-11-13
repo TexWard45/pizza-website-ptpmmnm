@@ -8,7 +8,7 @@ public class PizzaDto {
 
     private int id;
 
-    private int categoryid;
+    private int category_id;
 
     private String display;
 
