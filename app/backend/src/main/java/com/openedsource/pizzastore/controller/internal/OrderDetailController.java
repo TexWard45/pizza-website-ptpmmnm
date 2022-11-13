@@ -76,7 +76,7 @@ public class OrderDetailController {
             orderDetailRepository.deleteById(id);
             response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
         } else {
-            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Order Detail was not found");
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "OrderDetail was not found");
         }
         return response;
 
