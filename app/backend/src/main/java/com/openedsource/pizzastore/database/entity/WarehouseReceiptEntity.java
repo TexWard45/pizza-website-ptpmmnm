@@ -14,10 +14,13 @@ public class WarehouseReceiptEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "supplier_id")
-    private int supplierid;
+    private int supplier_id;
 
     private String handler;
+
+    private float total_price;
+
+    private int quantity;
 
     private LocalDate time_created;
 }

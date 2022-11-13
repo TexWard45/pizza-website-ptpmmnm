@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/warehousereceipt")
 @CrossOrigin(origins = "*")
 public class WarehouseReceiptController {
     @Autowired
@@ -25,7 +25,7 @@ public class WarehouseReceiptController {
     @Autowired
     private WarehouseReceiptService warehouseReceiptService;
 
-    @PostMapping("/warehousereceipt/add")
+    @PostMapping
     public ResponseEntity<Object> addWarehouseReceipt(@RequestBody(required = false) WarehouseReceiptDto warehouseReceiptDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(warehouseReceiptDto);
@@ -35,6 +35,7 @@ public class WarehouseReceiptController {
 
             try {
                 warehouseReceiptService.insertWarehouseReceipt(orderDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -44,26 +45,37 @@ public class WarehouseReceiptController {
         return response;
     }
 
-    @PutMapping("/warehousereceipt/update")
+    @PutMapping
     public ResponseEntity<Object> updateWarehouseReceipt(@RequestBody(required = false) WarehouseReceiptDto warehouseReceiptDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(warehouseReceiptDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
             WarehouseReceiptEntity warehouseReceiptEntity = new WarehouseReceiptEntity();
             BeanUtils.copyProperties(warehouseReceiptDto, warehouseReceiptEntity);
-
-            warehouseReceiptService.updateWarehouseReceipt(warehouseReceiptEntity);
-
+            if (warehouseReceiptRepository.findById(warehouseReceiptEntity.getId()).isPresent()) {
+                warehouseReceiptService.updateWarehouseReceipt(warehouseReceiptEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                warehouseReceiptService.updateWarehouseReceipt(warehouseReceiptEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
         }
         return response;
     }
 
-    @DeleteMapping("/warehousereceipt/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteWarehouseReceipt(@PathVariable("id") Integer id) {
-        warehouseReceiptRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (warehouseReceiptRepository.findById(id).isPresent()) {
+            warehouseReceiptRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Category was not found");
+        }
+        return response;
+
     }
 
     private String inputcheck(WarehouseReceiptDto warehouseReceiptDto) {
@@ -76,15 +88,23 @@ public class WarehouseReceiptController {
         if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getId())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Id" : ",Id"));
         }
-        if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getSupplierid()) && ValidateUtils.isFullWidthDigit(String.valueOf(warehouseReceiptDto.getSupplierid()))) {
+        if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getSupplier_id()) && ValidateUtils.isFullWidthDigit(String.valueOf(warehouseReceiptDto.getSupplier_id()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "SupplierId" : ",SupplierId"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "SupplierId" : ",SupplierId"));
         }
         if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getHandler())) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Handler" : ",Handler"));
         }
-        if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getTime_created())) {
-            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Time Created" : ",Time Created"));
+        if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getTotal_price())) {
+            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "TotalPrice" : ",TotalPrice"));
         }
+        if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getQuantity()) && ValidateUtils.isFullWidthDigit(String.valueOf(warehouseReceiptDto.getQuantity()))) {
+            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Quantity" : ",Quantity"));
+            errorField.append((ValidateUtils.isFullWidthDigit(errorField.toString()) ? "Quantity" : ",Quantity"));
+        }
+//        if (ValidateUtils.isNullOrEmpty(warehouseReceiptDto.getTime_created())) {
+//            errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Time Created" : ",Time Created"));
+//        }
         String message = "";
         if (!ValidateUtils.isNullOrEmpty((errorField.toString()))) {
             message = Constants.MessageString.PARAMETER_ERROR.getMessage() + "[" + errorField.toString() + "]";

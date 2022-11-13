@@ -9,9 +9,13 @@ public class WarehouseReceiptDto {
 
     private int id;
 
-    private int supplierid;
+    private int supplier_id;
 
     private String handler;
+
+    private float total_price;
+
+    private int quantity;
 
     private LocalDate time_created;
 }

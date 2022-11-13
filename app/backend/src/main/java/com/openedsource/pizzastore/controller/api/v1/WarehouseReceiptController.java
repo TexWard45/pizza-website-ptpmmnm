@@ -11,18 +11,17 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/warehousereceipt")
 @CrossOrigin(origins = "*")
 public class WarehouseReceiptController {
     @Autowired
     private WarehouseReceiptRepository warehouseReceiptRepository;
-    @GetMapping("/warehousereceipt")
-
+    @GetMapping
     public ResponseEntity<List<WarehouseReceiptEntity>> getWarehouseReceiptList(){
         List<WarehouseReceiptEntity> warehouseReceiptList = warehouseReceiptRepository.findAll();
         return ResponseEntity.ok().body(warehouseReceiptList);
     }
-    @GetMapping("/warehousereceipt/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getWarehouseReceipt(@PathVariable(name = "id") Integer id){
         Optional<WarehouseReceiptEntity> warehouseReceipt = warehouseReceiptRepository.findById(id);
         return ResponseEntity.ok().body(warehouseReceipt.get());
