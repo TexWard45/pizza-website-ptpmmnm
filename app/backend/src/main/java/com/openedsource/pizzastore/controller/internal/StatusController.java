@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/status")
 @CrossOrigin(origins = "*")
 public class StatusController {
     @Autowired
@@ -25,7 +25,7 @@ public class StatusController {
     @Autowired
     private StatusService statusService;
 
-    @PostMapping("/status/add")
+    @PostMapping
     public ResponseEntity<Object> addStatus(@RequestBody(required = false) StatusDto statusDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(statusDto);
@@ -35,6 +35,8 @@ public class StatusController {
 
             try {
                 statusService.insertStatus(orderDetailEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -44,26 +46,40 @@ public class StatusController {
         return response;
     }
 
-    @PutMapping("/status/update")
-    public ResponseEntity<Object> updateStatus(@RequestBody(required = false) StatusDto statusDto){
+    @PutMapping
+    public ResponseEntity<Object> updateStatus(@RequestBody(required = false) StatusDto statusDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(statusDto);
         if (ValidateUtils.isNullOrEmpty(message)) {
-            StatusEntity orderDetailEntity = new StatusEntity();
-            BeanUtils.copyProperties(statusDto, orderDetailEntity);
-
-            statusService.updateStatus(orderDetailEntity);
-
+            StatusEntity statusEntity = new StatusEntity();
+            BeanUtils.copyProperties(statusDto, statusEntity);
+            if (statusRepository.findById(statusEntity.getId()).isPresent()) {
+                statusService.updateStatus(statusEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                statusService.updateStatus(statusEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
         }
         return response;
     }
-    @DeleteMapping("/status/delete/{id}")
-    public ResponseEntity<?> deleteStatus(@PathVariable("id")Integer id) {
-        statusRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteStatus(@PathVariable("id") Integer id) {
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+
+        if (statusRepository.findById(id).isPresent()) {
+            statusRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "Category was not found");
+        }
+        return response;
+
     }
+
     private String inputcheck(StatusDto statusDto) {
 
         if (ValidateUtils.isNullOrEmpty(statusDto)) {

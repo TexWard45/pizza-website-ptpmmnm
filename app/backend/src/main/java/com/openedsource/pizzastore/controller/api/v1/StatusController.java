@@ -12,18 +12,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/status")
 @CrossOrigin(origins = "*")
 public class StatusController {
     @Autowired
     StatusRepository statusRepository;
 
-    @GetMapping("/status")
+    @GetMapping
     public ResponseEntity<List<StatusEntity>> getStatusList(){
         List<StatusEntity> statusList = statusRepository.findAll();
         return ResponseEntity.ok().body(statusList);
     }
-    @GetMapping("/status/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getStatus(@PathVariable(name = "id") Integer id){
         Optional<StatusEntity> status = statusRepository.findById(id);
         return ResponseEntity.ok().body(status.get());
