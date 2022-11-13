@@ -10,18 +10,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/grouppermission")
 @CrossOrigin(origins = "*")
 public class GroupPermissionController {
     @Autowired
     private GroupPermissionRepository groupPermissionRepository;
 
-    @GetMapping("/grouppermission")
+    @GetMapping
     public ResponseEntity<List<GroupPermissionEntity>> getGroupPermissionList(){
         List<GroupPermissionEntity> groupPermissionList = groupPermissionRepository.findAll();
         return ResponseEntity.ok().body(groupPermissionList);
     }
-    @GetMapping("/grouppermission/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getGroupPermission(@PathVariable(name = "id") Integer id){
         Optional<GroupPermissionEntity> groupPermission = groupPermissionRepository.findById(id);
         return ResponseEntity.ok().body(groupPermission.get());

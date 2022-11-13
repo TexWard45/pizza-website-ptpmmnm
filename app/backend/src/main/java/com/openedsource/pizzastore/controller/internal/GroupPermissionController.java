@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping("/internal/grouppermission")
 @CrossOrigin(origins = "*")
 public class GroupPermissionController {
     @Autowired
@@ -26,7 +26,7 @@ public class GroupPermissionController {
     @Autowired
     private GroupPermissionService groupPermissionService;
 
-    @PostMapping("/grouppermission/add")
+    @PostMapping
     public ResponseEntity<Object> addGroupPermission(@RequestBody(required = false) GroupPermissionDto groupPermissionDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).build();
         String message = inputcheck(groupPermissionDto);
@@ -37,6 +37,8 @@ public class GroupPermissionController {
 
             try {
                 groupPermissionService.insertGroupPermission(groupPermissionEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+
             } catch (DuplicateKeyException e) {
                 response = ResponseUtils.buildMessageReponse(HttpStatus.CONFLICT, Constants.MessageString.CONFLICT_ERROR.getMessage());
             }
@@ -46,16 +48,21 @@ public class GroupPermissionController {
         return response;
     }
 
-    @PutMapping("/grouppermission/update")
+    @PutMapping
     public ResponseEntity<Object> updateGroupPermission(@RequestBody GroupPermissionDto groupPermissionDto) {
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
         String message = inputcheck(groupPermissionDto);
-        
+
         if (ValidateUtils.isNullOrEmpty(message)) {
             GroupPermissionEntity groupPermissionEntity = new GroupPermissionEntity();
             BeanUtils.copyProperties(groupPermissionDto, groupPermissionEntity);
-
-            groupPermissionService.updateGroupPermission(groupPermissionEntity);
+            if (groupPermissionRepository.findById(groupPermissionEntity.getId()).isPresent()) {
+                groupPermissionService.updateGroupPermission(groupPermissionEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Update Successfully");
+            } else {
+                groupPermissionService.updateGroupPermission(groupPermissionEntity);
+                response = ResponseUtils.buildMessageReponse(HttpStatus.CREATED, "Successfully Added");
+            }
 
         } else {
             response = ResponseUtils.buildMessageReponse(HttpStatus.BAD_REQUEST, message);
@@ -63,10 +70,17 @@ public class GroupPermissionController {
         return response;
     }
 
-    @DeleteMapping("/grouppermission/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGroupPermission(@PathVariable("id") Integer id) {
-        groupPermissionRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).build();
+        if (groupPermissionRepository.findById(id).isPresent()) {
+            groupPermissionRepository.deleteById(id);
+            response = ResponseUtils.buildMessageReponse(HttpStatus.OK, "Successfully Deleted");
+        } else {
+            response = ResponseUtils.buildMessageReponse(HttpStatus.NOT_FOUND, "GroupPermission was not found");
+        }
+        return response;
+
     }
 
     private String inputcheck(GroupPermissionDto groupPermissionDto) {
@@ -87,6 +101,7 @@ public class GroupPermissionController {
         }
         if (ValidateUtils.isNullOrEmpty(groupPermissionDto.getValue()) && ValidateUtils.isFullWidthDigit(String.valueOf(groupPermissionDto.getValue()))) {
             errorField.append((ValidateUtils.isNullOrEmpty(errorField) ? "Value" : ",Value"));
+            errorField.append(ValidateUtils.isFullWidthDigit(errorField.toString()) ? "Value" : ",Value");
         }
 
         String message = "";
